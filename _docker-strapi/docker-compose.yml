@@ -1,0 +1,19 @@
+version: '3'
+services:
+  proxy:
+    image: jwilder/nginx-proxy
+    container_name: proxy.${DOMAIN}
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: api.${DOMAIN}
+    volumes:
+      - ./api:/srv/app
+    environment:
+      VIRTUAL_HOST: api.${DOMAIN}
+      VIRTUAL_PORT: 1337

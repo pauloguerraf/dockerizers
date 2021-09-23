@@ -1,0 +1,22 @@
+version: '3'
+services:
+  proxy:
+    image: jwilder/nginx-proxy
+    container_name: proxy.${DOMAIN}
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+  app:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    container_name: app.${DOMAIN}
+    volumes:
+      - ./app:/var/www/html
+      - /var/www/html/node_modules
+    environment:
+      VIRTUAL_HOST: app.${DOMAIN}
+      VIRTUAL_PORT: 3000
+    # or
+    # command: yarn build && yarn start
